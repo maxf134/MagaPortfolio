@@ -1,0 +1,655 @@
+/* ============================================================
+   BASE
+   ============================================================ */
+.app {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+}
+
+/* 3D-сцена на заднем плане — не перехватывает клики */
+.scene-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Оверлей перехода */
+.transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 6vw;
+  mix-blend-mode: difference;
+  pointer-events: auto; /* Возвращаем клики меню */
+}
+
+.navbar__logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.25em;
+  color: #fff;
+}
+
+.navbar__links {
+  display: flex;
+  gap: 32px;
+}
+
+.navbar__link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  color: #fff;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.navbar__link:hover {
+  opacity: 1;
+}
+
+/* ============================================================
+   HERO (Home)
+   ============================================================ */
+.hero {
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 8vw;
+  pointer-events: none; /* Пропускаем клики сквозь текст к сцене */
+}
+
+.hero__eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.hero__title {
+  font-size: clamp(48px, 9vw, 148px);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.hero__title span {
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 45%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__subtitle {
+  margin-top: 32px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+}
+
+.hero__cta {
+  margin-top: 48px;
+  pointer-events: auto; /* Возвращаем клики кнопке */
+}
+
+/* ============================================================
+   PAGES (общая обёртка)
+   ============================================================ */
+.page {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  padding: 140px 8vw 100px;
+  background: transparent;
+  pointer-events: none; /* Пропускаем клики сквозь текст */
+}
+
+.page__header {
+  margin-bottom: 60px;
+}
+
+.page__eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.page__title {
+  font-size: clamp(40px, 7vw, 110px);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.page__title span {
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 45%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================================
+   WORKS
+   ============================================================ */
+.works__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 60px;
+  pointer-events: auto; /* Клики по фильтрам */
+}
+
+.works__filter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  padding: 10px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--fg);
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.works__filter:hover {
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.works__filter.is-active {
+  opacity: 1;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.works__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 40px;
+  pointer-events: auto; /* Клики по карточкам */
+}
+
+.work-card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.4s ease, border-color 0.4s ease;
+}
+
+.work-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(124, 58, 237, 0.5);
+}
+
+.work-card__thumb {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.work-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.work-card:hover .work-card__thumb img {
+  transform: scale(1.05);
+}
+
+.work-card__type {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 100px;
+  backdrop-filter: blur(10px);
+}
+
+.work-card__body {
+  padding: 22px;
+}
+
+.work-card__title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.work-card__desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.work-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.work-card__tags span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(124, 58, 237, 0.15);
+  color: #c4b5fd;
+}
+
+/* ============================================================
+   PROJECT PAGE
+   ============================================================ */
+.project {
+  pointer-events: none;
+}
+
+/* --- Кнопка "Назад" теперь фиксированная --- */
+.project__back {
+  position: fixed;
+  top: 90px; /* Чуть ниже навбара */
+  left: 8vw;
+  z-index: 100;
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  padding: 10px 16px;
+  background: rgba(9, 10, 15, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  pointer-events: auto;
+}
+
+.project__back:hover {
+  color: var(--fg);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.project__header {
+  max-width: 900px;
+  margin: 0 auto 60px; /* 👈 ДОБАВЛЕН auto ПО БОКАМ */
+  width: 100%;
+}
+
+.project__eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--accent-2);
+  margin-bottom: 20px;
+}
+
+.project__title {
+  font-size: clamp(40px, 7vw, 96px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.project__desc {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 720px;
+  margin-bottom: 24px;
+}
+
+.project__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.project__tags span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(124, 58, 237, 0.15);
+  color: #c4b5fd;
+}
+
+.project__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  pointer-events: auto;
+}
+
+/* --- Единый контейнер для видео и игр --- */
+.media-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 40px 0 80px;
+}
+
+.media-container {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  aspect-ratio: 16 / 9;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #000;
+  box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.8);
+}
+
+/* Стили для фуллскрина (работает и для видео, и для iframe) */
+.media-container:fullscreen {
+  border-radius: 0;
+  max-width: none;
+  width: 100vw;
+  height: 100vh;
+  aspect-ratio: auto;
+  border: none;
+}
+
+.media-container iframe,
+.media-container video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  object-fit: contain; /* Чтобы видео не обрезалось */
+}
+
+
+.project__video {
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  display: block;
+}
+
+/* iframe-обёртка для игр */
+/* ============================================================
+   IFRAME EMBED (Игры и приложения)
+   ============================================================ */
+.game-embed-wrapper {
+  display: flex;
+  justify-content: center; /* Центрируем игру по горизонтали */
+  width: 100%;
+  margin: 40px 0 80px;
+}
+
+.game-embed {
+  position: relative;
+  width: 100%;
+  max-width: 1000px; /* Ограничиваем ширину, чтобы не растягивалась на весь 4K монитор */
+  aspect-ratio: 16 / 9;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #000;
+  box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.8);
+  transition: border-radius 0.3s ease;
+}
+
+/* Стили для полноэкранного режима */
+.game-embed:fullscreen {
+  border-radius: 0;
+  max-width: none;
+  width: 100vw;
+  height: 100vh;
+  aspect-ratio: auto;
+  border: none;
+}
+
+.game-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Кнопка Fullscreen */
+.game-embed__fullscreen-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+  padding: 10px 16px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+.media-container:hover .game-embed__fullscreen-btn {
+  opacity: 1;
+}
+
+.game-embed__fullscreen-btn:hover {
+  background: rgba(124, 58, 237, 0.8);
+  border-color: rgba(124, 58, 237, 1);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   КНОПКИ
+   ============================================================ */
+.btn-primary {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  padding: 16px 32px;
+  border-radius: 100px;
+  background: var(--accent);
+  color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  pointer-events: auto; /* Возвращаем клики кнопке */
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.6);
+}
+
+/* ============================================================
+   КУРСОР (С эффектом увеличительной линзы)
+   ============================================================ */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+/* Белая точка (прячется внутри лупы) */
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: #ffffff;
+  mix-blend-mode: difference;
+  transition: opacity 0.2s ease;
+}
+
+.cursor-dot.is-hidden {
+  opacity: 0;
+}
+
+/* Обычное тонкое кольцо */
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.3s ease, 
+              background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Обрезаем текст, если он слишком длинный */
+}
+
+/* ЭФФЕКТ ЛУПЫ */
+.cursor-ring.is-lens {
+  width: 100px;
+  height: 100px;
+  background: rgba(124, 58, 237, 0.85); /* Плотный фиолетовый фон */
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 30px rgba(124, 58, 237, 0.6);
+}
+
+/* Увеличенный текст внутри лупы */
+.cursor-lens-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 900;
+  color: #fff;
+  text-align: center;
+  line-height: 1.1;
+  padding: 0 10px;
+  animation: zoomInText 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes zoomInText {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   ЭФФЕКТ УВЕЛИЧЕНИЯ КНОПОК И СКРЫТИЯ ТЕКСТА
+   ============================================================ */
+.btn-primary,
+.navbar__link,
+.works__filter,
+.project__back {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              color 0.2s ease, 
+              border-color 0.3s ease,
+              box-shadow 0.4s ease,
+              background-color 0.3s ease;
+}
+
+/* Применяем эффект ТОЛЬКО к кнопкам (без карточек и логотипа) */
+.btn-primary:hover,
+.navbar__link:hover,
+.works__filter:hover,
+.project__back:hover {
+  /* 1. Увеличиваем кнопку */
+  transform: scale(1.25); 
+  
+  /* 2. Делаем оригинальный текст прозрачным */
+  color: transparent !important; 
+  
+  /* 3. Добавляем свечение */
+  box-shadow: 0 0 40px rgba(124, 58, 237, 0.4);
+  z-index: 10;
+}
+
+/* Отдельная настройка для кнопки с фиолетовым фоном */
+.btn-primary:hover {
+  background: rgba(124, 58, 237, 0.8);
+}
+
+/* Для фильтров и ссылок в навбаре добавляем рамку */
+.works__filter:hover,
+.navbar__link:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+
+/* ============================================================
+   МОБИЛЬНАЯ АДАПТАЦИЯ И ТАЧ-УСТРОЙСТВА
+   ============================================================ */
+@media (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 0 5vw;
+  }
+  .page {
+    padding: 100px 5vw 60px;
+  }
+  .navbar {
+    padding: 20px 5vw;
+  }
+  .hero__title {
+    font-size: 56px;
+  }
+  .page__title {
+    font-size: 48px;
+  }
+  .works__grid {
+    grid-template-columns: 1fr;
+  }
+}
