@@ -79,7 +79,7 @@ export const projects: Project[] = [
     description: 'Мини-приложение на React + TypeScript для рисования комиксов.',
     thumbnail: '/thumbnails/komix.png',
     // ⚠️ Внимание: здесь указана та же ссылка, что и у Car_Game. Проверь URL!
-    embed: { type: 'external', url: 'https://maxf134.github.io/Car_Game/' },
+    embed: { type: 'external', url: 'https://maxf134.github.io/Komix/' },
     tags: ['React', 'TypeScript', 'D3'],
     year: '2026',
   },
@@ -181,16 +181,7 @@ export const projects: Project[] = [
     tags: ['After Effects'],
     year: '2024',
   },
-  {
-    id: 'stream-overlay',
-    title: 'Stream HUD Overlay',
-    type: 'overlay',
-    category: 'Оверлеи',
-    description: 'Оверлей для стримов на Twitch — сцена, алерты, чат-виджет. Минималистичный футуризм.',
-    thumbnail: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=1200&q=80',
-    tags: ['OBS', 'CSS', 'HTML'],
-    year: '2024',
-  },
+  
 ];
 
 export const getProjectById = (id: string) =>
