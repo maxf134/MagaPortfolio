@@ -504,7 +504,7 @@
 }
 
 /* ============================================================
-   КУРСОР (Бронебойный, без рамок и бленд-модов)
+   КУРСОР (Независимый от темы браузера и контрастный)
    ============================================================ */
 .cursor-dot,
 .cursor-ring {
@@ -514,17 +514,17 @@
   pointer-events: none;
   z-index: 99999;
   border-radius: 50%;
-  /* Убрали will-change, так как он иногда вызывает баги отрисовки в Opera GX */
+  /* 👇 ГЛАВНОЕ СВОЙСТВО: Запрещает браузеру (Opera, Chrome) менять наши цвета */
+  forced-color-adjust: none; 
 }
 
-/* Белая точка с черной обводкой (видно на любом фоне) */
+/* Точка: Белая с черной обводкой (видно и на белом, и на черном) */
 .cursor-dot {
   width: 8px;
   height: 8px;
   background: #ffffff;
-  /* Обводка и свечение через тени */
-  box-shadow: 0 0 0 2px #000000, 
-              0 0 10px rgba(255, 255, 255, 0.8);
+  /* Черная обводка через тень (работает стабильнее, чем border) */
+  box-shadow: 0 0 0 2px #000000; 
   transition: opacity 0.2s ease;
 }
 
@@ -532,45 +532,47 @@
   opacity: 0;
 }
 
-/* Обычное кольцо — используем плотную обводку через box-shadow */
+/* Обычное кольцо */
 .cursor-ring {
   width: 34px;
   height: 34px;
   background: transparent;
-  /* Вместо border используем двойную тень (белая + черная для контраста) */
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 
-              0 0 0 3px rgba(0, 0, 0, 0.6),
-              inset 0 0 8px rgba(0, 0, 0, 0.3);
+  /* Делаем кольцо: белая основа, черная внешняя и внутренняя обводка */
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 2px #000000, inset 0 0 0 1px #000000;
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
               height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-              box-shadow 0.3s ease, 
-              background-color 0.3s ease;
+              border-color 0.3s ease, 
+              background-color 0.3s ease,
+              box-shadow 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
 
-/* ЭФФЕКТ ЛУПЫ */
+/* ЭФФЕКТ ЛУПЫ (при наведении на кнопки) */
 .cursor-ring.is-lens {
   width: 100px;
   height: 100px;
-  background: #7c3aed; /* Плотный фиолетовый цвет вместо прозрачного */
-  box-shadow: 0 0 0 2px #ffffff, 
-              0 0 0 4px #000000,
-              0 0 30px rgba(124, 58, 237, 0.8);
+  /* Сплошной фиолетовый фон (непрозрачный, чтобы не было багов в Опере) */
+  background: #7c3aed; 
+  border: 2px solid #ffffff;
+  /* Добавляем неоновое свечение */
+  box-shadow: 0 0 0 2px #000000, 0 0 30px rgba(124, 58, 237, 0.8);
 }
 
-/* Увеличенный текст внутри лупы */
+/* Текст внутри лупы */
 .cursor-lens-text {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   font-weight: 900;
-  color: #fff;
+  color: #ffffff; /* Текст всегда белый */
   text-align: center;
   line-height: 1.1;
   padding: 0 10px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Тень, чтобы текст читался на фиолетовом */
+  forced-color-adjust: none;
   animation: zoomInText 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
