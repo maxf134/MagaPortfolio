@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect } from 'react';
 import { getAssetUrl } from '../utils/asset';
 import { useParams } from 'react-router-dom';
 import { getProjectById } from '../data/projects';
@@ -7,6 +8,41 @@ import { TransitionLink } from '../components/three/TransitionOverlay';
 export function ProjectPage() {
   const { id } = useParams();
   const project = id ? getProjectById(id) : undefined;
+  
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // 👇 Состояния для YouTube-подобного плеера
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const timeoutRef = useRef<number | null>(null);
+
+  // 👇 Функция переключения (Play/Pause)
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+        setIsPlaying(true);
+      } else {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      }
+
+      // Показываем иконку и запускаем таймер на её исчезновение
+      setShowFeedback(true);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      
+      timeoutRef.current = window.setTimeout(() => {
+        setShowFeedback(false);
+      }, 600); // Иконка исчезнет через 0.6 секунды
+    }
+  };
+
+  // Очищаем таймер при размонтировании компонента
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   if (!project) {
     return (
@@ -21,10 +57,11 @@ export function ProjectPage() {
 
   return (
     <div className="page project">
-      {/* Кнопка теперь с классом для фиксации */}
-      <TransitionLink to="/works" className="project__back notranslate" translate="no">
-        ← ВСЕ РАБОТЫ
-      </TransitionLink>
+      <div translate="no" className="notranslate">
+        <TransitionLink to="/works" className="project__back">
+          ← ВСЕ РАБОТЫ
+        </TransitionLink>
+      </div>
 
       <div className="project__header">
         <div className="project__eyebrow">
@@ -40,45 +77,42 @@ export function ProjectPage() {
       </div>
 
       <div className="project__content">
-        {/* Игра (iframe) */}
         {project.embed?.type === 'iframe' && (
           <GameEmbed src={project.embed.url} />
         )}
 
-        {/* Видео (теперь в такой же рамке, как игра) */}
         {project.embed?.type === 'video' && (
           <div className="media-wrapper">
-            <div className="media-container">
+            <div className="media-container custom-video-container">
               <video
+                ref={videoRef}
+                onClick={togglePlay}
                 src={getAssetUrl(project.embed.url)}
-                autoPlay
-                muted
-                loop
+                poster={getAssetUrl('/thumbnails/video-placeholder.png')}
+                preload="none"
                 playsInline
-                controls
+                style={{ cursor: 'pointer' }}
+                // 👇 Синхронизируем состояние, если видео останавливается извне
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
               />
+              
+              {/* 👇 Кнопка появляется только при клике (класс show-feedback) */}
+              <div className={`custom-play-btn ${showFeedback ? 'show-feedback' : ''}`}>
+                {isPlaying ? '▶' : '❚❚'}
+              </div>
             </div>
           </div>
         )}
 
         {project.embed?.type === 'github-link' && (
-          <a
-            href={project.embed.url}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-primary"
-          >
+          <a href={project.embed.url} target="_blank" rel="noreferrer" className="btn-primary">
             Открыть на GitHub ↗
           </a>
         )}
 
         {project.embed?.type === 'external' && (
-          <a
-            href={project.embed.url}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-primary"
-          >
+          <a href={project.embed.url} target="_blank" rel="noreferrer" className="btn-primary">
             Открыть проект ↗
           </a>
         )}

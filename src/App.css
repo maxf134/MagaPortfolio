@@ -578,6 +578,39 @@
   to { transform: scale(1); opacity: 1; }
 }
 
+.custom-video-container {
+  position: relative;
+}
+
+.custom-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Изначально кнопка чуть уменьшена (эффект нажатия) */
+  transform: translate(-50%, -50%) scale(0.8);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(124, 58, 237, 0.85); /* Наш фиолетовый */
+  border: 2px solid #fff;
+  color: #fff;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0; /* Скрыта по умолчанию */
+  pointer-events: none; /* Клики проходят сквозь неё на само видео */
+  
+  /* Плавная анимация появления и исчезновения */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* 👇 Этот класс добавляется только на долю секунды при клике */
+.custom-play-btn.show-feedback {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
 /* ============================================================
    ЭФФЕКТ УВЕЛИЧЕНИЯ КНОПОК И СКРЫТИЯ ТЕКСТА
    ============================================================ */

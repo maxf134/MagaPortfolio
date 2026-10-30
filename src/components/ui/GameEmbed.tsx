@@ -1,9 +1,13 @@
-import { getAssetUrl } from '../../utils/asset';
 import { useEffect, useRef, useState } from 'react';
+import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
+import { getAssetUrl } from '../../utils/asset';
 
 export function GameEmbed({ src }: { src: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  
+  // 👇 Используем хук для отслеживания видимости
+  const { ref: observerRef, isIntersecting } = useIntersectionObserver();
 
   const toggleFullscreen = () => {
     if (!containerRef.current) return;
@@ -21,21 +25,31 @@ export function GameEmbed({ src }: { src: string }) {
   }, []);
 
   return (
-    <div className="media-wrapper">
+    <div className="media-wrapper" ref={observerRef as any}>
       <div className="media-container" ref={containerRef}>
-        <iframe
-          src={getAssetUrl(src)}
-          title="Embedded Content"
-          allow="autoplay; fullscreen; gamepad; xr-spatial-tracking"
-          loading="lazy"
-        />
-        <button
-          className="game-embed__fullscreen-btn"
-          onClick={toggleFullscreen}
-          title={isFullscreen ? 'Выйти из полноэкранного режима' : 'На весь экран'}
-        >
-          {isFullscreen ? '✕ Exit' : '⛶ Fullscreen'}
-        </button>
+        {isIntersecting ? (
+          <iframe
+            src={getAssetUrl(src)}
+            title="Embedded Content"
+            allow="autoplay; fullscreen; gamepad; xr-spatial-tracking"
+            loading="lazy"
+          />
+        ) : (
+          // Показываем заглушку, пока игра не появится на экране
+          <div style={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#fff', background: '#111' }}>
+            Игра загрузится при прокрутке...
+          </div>
+        )}
+        
+        {isIntersecting && (
+          <button
+            className="game-embed__fullscreen-btn"
+            onClick={toggleFullscreen}
+            title={isFullscreen ? 'Выйти из полноэкранного режима' : 'На весь экран'}
+          >
+            {isFullscreen ? '✕ Exit' : '⛶ Fullscreen'}
+          </button>
+        )}
       </div>
     </div>
   );
