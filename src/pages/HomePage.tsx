@@ -11,7 +11,7 @@ export function HomePage() {
       </h1>
       <p className="hero__subtitle">ИГРЫ · ПРИЛОЖЕНИЯ · МОУШН · ОВЕРЛЕИ</p>
 
-      <div className="hero__cta">
+      <div className="hero__cta notranslate" translate="no">
         <TransitionLink to="/works" className="btn-primary">
           Смотреть работы →
         </TransitionLink>

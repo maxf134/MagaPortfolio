@@ -41,6 +41,9 @@ const TransitionMaterial = shaderMaterial(
     }
 
     void main() {
+      // 👇 ГЛАВНЫЙ ФИКС: Если перехода нет, шейдер ничего не рисует (убирает мазки)
+      if (uProgress < 0.01) discard; 
+
       float n = noise(vUv * 8.0) * 0.65 + noise(vUv * 20.0) * 0.35;
       float threshold = 1.0 - uProgress;
       float alpha = smoothstep(threshold - 0.12, threshold + 0.02, n);
@@ -133,25 +136,21 @@ export function useTransition() {
   return useContext(TransitionContext);
 }
 
-export function TransitionLink({
-  to,
-  children,
-  className,
-}: {
+interface TransitionLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   to: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
+}
+
+export function TransitionLink({ to, children, className, ...props }: TransitionLinkProps) {
   const { navigateWithTransition } = useTransition();
   return (
     <a
       href={to}
       className={className}
       onClick={(e) => {
-        console.log("КЛИК ПО ССЫЛКЕ СРАБОТАЛ!");
         e.preventDefault();
         navigateWithTransition(to);
       }}
+      {...props}
     >
       {children}
     </a>

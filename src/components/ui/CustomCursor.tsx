@@ -6,6 +6,21 @@ export function CustomCursor() {
   const [hovered, setHovered] = useState(false);
   const [cursorText, setCursorText] = useState('');
 
+
+    // 👇 ФИКС ФУЛЛСКРИНА
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      if (document.fullscreenElement) {
+        document.body.classList.add('is-fullscreen');
+      } else {
+        document.body.classList.remove('is-fullscreen');
+      }
+    };
+    
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+  }, []);
+
   useEffect(() => {
     const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     const ring = { ...mouse };

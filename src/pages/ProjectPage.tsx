@@ -22,7 +22,7 @@ export function ProjectPage() {
   return (
     <div className="page project">
       {/* Кнопка теперь с классом для фиксации */}
-      <TransitionLink to="/works" className="project__back">
+      <TransitionLink to="/works" className="project__back notranslate" translate="no">
         ← ВСЕ РАБОТЫ
       </TransitionLink>
 
