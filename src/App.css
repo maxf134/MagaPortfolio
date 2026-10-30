@@ -504,7 +504,7 @@
 }
 
 /* ============================================================
-   КУРСОР (Бронебойный для всех браузеров)
+   КУРСОР (Бронебойный, без рамок и бленд-модов)
    ============================================================ */
 .cursor-dot,
 .cursor-ring {
@@ -512,17 +512,19 @@
   top: 0;
   left: 0;
   pointer-events: none;
-  z-index: 99999; /* Увеличили z-index, чтобы точно был поверх всего */
+  z-index: 99999;
   border-radius: 50%;
-  will-change: transform;
+  /* Убрали will-change, так как он иногда вызывает баги отрисовки в Opera GX */
 }
 
-/* Белая точка — убрали mix-blend-mode, добавили яркое свечение */
+/* Белая точка с черной обводкой (видно на любом фоне) */
 .cursor-dot {
   width: 8px;
   height: 8px;
   background: #ffffff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 2px rgba(0, 0, 0, 1); /* Тень для контраста */
+  /* Обводка и свечение через тени */
+  box-shadow: 0 0 0 2px #000000, 
+              0 0 10px rgba(255, 255, 255, 0.8);
   transition: opacity 0.2s ease;
 }
 
@@ -530,17 +532,18 @@
   opacity: 0;
 }
 
-/* Обычное кольцо — сделали его ярче и плотнее */
+/* Обычное кольцо — используем плотную обводку через box-shadow */
 .cursor-ring {
   width: 34px;
   height: 34px;
-  /* Сделали рамку более плотной (0.8 вместо 0.4) */
-  border: 2px solid rgba(255, 255, 255, 0.8); 
-  /* Добавили темную тень, чтобы кольцо не терялось на светлых участках 3D */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  background: transparent;
+  /* Вместо border используем двойную тень (белая + черная для контраста) */
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 
+              0 0 0 3px rgba(0, 0, 0, 0.6),
+              inset 0 0 8px rgba(0, 0, 0, 0.3);
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
               height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-              border-color 0.3s ease, 
+              box-shadow 0.3s ease, 
               background-color 0.3s ease;
   display: flex;
   align-items: center;
@@ -552,9 +555,10 @@
 .cursor-ring.is-lens {
   width: 100px;
   height: 100px;
-  background: rgba(124, 58, 237, 0.95); /* Сделали фиолетовый фон плотнее */
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 30px rgba(124, 58, 237, 0.8), inset 0 0 15px rgba(0,0,0,0.5);
+  background: #7c3aed; /* Плотный фиолетовый цвет вместо прозрачного */
+  box-shadow: 0 0 0 2px #ffffff, 
+              0 0 0 4px #000000,
+              0 0 30px rgba(124, 58, 237, 0.8);
 }
 
 /* Увеличенный текст внутри лупы */
@@ -566,8 +570,13 @@
   text-align: center;
   line-height: 1.1;
   padding: 0 10px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
   animation: zoomInText 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes zoomInText {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 /* ============================================================
