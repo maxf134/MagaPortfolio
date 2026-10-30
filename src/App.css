@@ -504,7 +504,7 @@
 }
 
 /* ============================================================
-   КУРСОР (Независимый от темы браузера через SVG)
+   КУРСОР (Контрастный на любом фоне)
    ============================================================ */
 .cursor-dot,
 .cursor-ring {
@@ -514,18 +514,16 @@
   pointer-events: none;
   z-index: 99999;
   border-radius: 50%;
-  /* Запрещаем браузеру менять цвета */
   forced-color-adjust: none !important; 
 }
 
-/* Точка: Белая с черной обводкой (в виде SVG) */
+/* Точка: Возвращаем магию инверсии цветов */
 .cursor-dot {
-  width: 10px;
-  height: 10px;
-  background-color: transparent;
-  /* Картинка в формате Base64 (белый круг с черной обводкой) */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Ccircle cx='5' cy='5' r='3' fill='white' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
-  background-size: cover;
+  width: 8px;
+  height: 8px;
+  background-color: #ffffff;
+  /* 👇 Это создает эффект контраста на любом цвете */
+  mix-blend-mode: difference; 
   transition: opacity 0.2s ease;
 }
 
@@ -533,16 +531,17 @@
   opacity: 0;
 }
 
-/* Обычное кольцо (в виде SVG) */
+/* Кольцо: Сделали больше (44px), чтобы точка не сливалась */
 .cursor-ring {
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   background-color: transparent;
-  /* Картинка в формате Base64 (белое кольцо с черной обводкой) */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Ccircle cx='17' cy='17' r='15' fill='none' stroke='white' stroke-width='2'/%3E%3Ccircle cx='17' cy='17' r='16' fill='none' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
-  background-size: 100% 100%; /* Растягиваем SVG при увеличении */
+  /* Рамка тоже инвертируется */
+  border: 2px solid #ffffff;
+  mix-blend-mode: difference;
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
               height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.3s ease, 
               background-color 0.3s ease;
   display: flex;
   align-items: center;
@@ -554,13 +553,11 @@
 .cursor-ring.is-lens {
   width: 100px;
   height: 100px;
-  /* Убираем SVG кольца, чтобы залить фон */
-  background-image: none;
-  /* Плотный фиолетовый фон. Добавляем !important, чтобы Опера не трогала */
-  background-color: #7c3aed !important; 
-  /* Делаем жесткую обводку */
+  /* Отключаем инверсию для лупы, чтобы фиолетовый был ярким */
+  mix-blend-mode: normal; 
+  background-color: #7c3aed; 
   border: 2px solid #ffffff;
-  box-shadow: 0 0 0 2px #000000;
+  box-shadow: 0 0 30px rgba(124, 58, 237, 0.6);
 }
 
 /* Текст внутри лупы */
@@ -568,12 +565,11 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   font-weight: 900;
-  color: #ffffff !important;
+  color: #ffffff;
   text-align: center;
   line-height: 1.1;
   padding: 0 10px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-  forced-color-adjust: none !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
   animation: zoomInText 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
