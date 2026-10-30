@@ -504,7 +504,7 @@
 }
 
 /* ============================================================
-   КУРСОР (Независимый от темы браузера и контрастный)
+   КУРСОР (Независимый от темы браузера через SVG)
    ============================================================ */
 .cursor-dot,
 .cursor-ring {
@@ -514,17 +514,18 @@
   pointer-events: none;
   z-index: 99999;
   border-radius: 50%;
-  /* 👇 ГЛАВНОЕ СВОЙСТВО: Запрещает браузеру (Opera, Chrome) менять наши цвета */
-  forced-color-adjust: none; 
+  /* Запрещаем браузеру менять цвета */
+  forced-color-adjust: none !important; 
 }
 
-/* Точка: Белая с черной обводкой (видно и на белом, и на черном) */
+/* Точка: Белая с черной обводкой (в виде SVG) */
 .cursor-dot {
-  width: 8px;
-  height: 8px;
-  background: #ffffff;
-  /* Черная обводка через тень (работает стабильнее, чем border) */
-  box-shadow: 0 0 0 2px #000000; 
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+  /* Картинка в формате Base64 (белый круг с черной обводкой) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Ccircle cx='5' cy='5' r='3' fill='white' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+  background-size: cover;
   transition: opacity 0.2s ease;
 }
 
@@ -532,19 +533,17 @@
   opacity: 0;
 }
 
-/* Обычное кольцо */
+/* Обычное кольцо (в виде SVG) */
 .cursor-ring {
   width: 34px;
   height: 34px;
-  background: transparent;
-  /* Делаем кольцо: белая основа, черная внешняя и внутренняя обводка */
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 0 2px #000000, inset 0 0 0 1px #000000;
+  background-color: transparent;
+  /* Картинка в формате Base64 (белое кольцо с черной обводкой) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Ccircle cx='17' cy='17' r='15' fill='none' stroke='white' stroke-width='2'/%3E%3Ccircle cx='17' cy='17' r='16' fill='none' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 100% 100%; /* Растягиваем SVG при увеличении */
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
               height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-              border-color 0.3s ease, 
-              background-color 0.3s ease,
-              box-shadow 0.3s ease;
+              background-color 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -555,11 +554,13 @@
 .cursor-ring.is-lens {
   width: 100px;
   height: 100px;
-  /* Сплошной фиолетовый фон (непрозрачный, чтобы не было багов в Опере) */
-  background: #7c3aed; 
+  /* Убираем SVG кольца, чтобы залить фон */
+  background-image: none;
+  /* Плотный фиолетовый фон. Добавляем !important, чтобы Опера не трогала */
+  background-color: #7c3aed !important; 
+  /* Делаем жесткую обводку */
   border: 2px solid #ffffff;
-  /* Добавляем неоновое свечение */
-  box-shadow: 0 0 0 2px #000000, 0 0 30px rgba(124, 58, 237, 0.8);
+  box-shadow: 0 0 0 2px #000000;
 }
 
 /* Текст внутри лупы */
@@ -567,12 +568,12 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   font-weight: 900;
-  color: #ffffff; /* Текст всегда белый */
+  color: #ffffff !important;
   text-align: center;
   line-height: 1.1;
   padding: 0 10px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Тень, чтобы текст читался на фиолетовом */
-  forced-color-adjust: none;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  forced-color-adjust: none !important;
   animation: zoomInText 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
