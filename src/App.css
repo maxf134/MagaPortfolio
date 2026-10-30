@@ -504,7 +504,7 @@
 }
 
 /* ============================================================
-   КУРСОР (С эффектом увеличительной линзы)
+   КУРСОР (Бронебойный для всех браузеров)
    ============================================================ */
 .cursor-dot,
 .cursor-ring {
@@ -512,17 +512,17 @@
   top: 0;
   left: 0;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 99999; /* Увеличили z-index, чтобы точно был поверх всего */
   border-radius: 50%;
   will-change: transform;
 }
 
-/* Белая точка (прячется внутри лупы) */
+/* Белая точка — убрали mix-blend-mode, добавили яркое свечение */
 .cursor-dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   background: #ffffff;
-  mix-blend-mode: difference;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 2px rgba(0, 0, 0, 1); /* Тень для контраста */
   transition: opacity 0.2s ease;
 }
 
@@ -530,11 +530,14 @@
   opacity: 0;
 }
 
-/* Обычное тонкое кольцо */
+/* Обычное кольцо — сделали его ярче и плотнее */
 .cursor-ring {
   width: 34px;
   height: 34px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  /* Сделали рамку более плотной (0.8 вместо 0.4) */
+  border: 2px solid rgba(255, 255, 255, 0.8); 
+  /* Добавили темную тень, чтобы кольцо не терялось на светлых участках 3D */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
               height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
               border-color 0.3s ease, 
@@ -542,16 +545,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* Обрезаем текст, если он слишком длинный */
+  overflow: hidden;
 }
 
 /* ЭФФЕКТ ЛУПЫ */
 .cursor-ring.is-lens {
   width: 100px;
   height: 100px;
-  background: rgba(124, 58, 237, 0.85); /* Плотный фиолетовый фон */
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 30px rgba(124, 58, 237, 0.6);
+  background: rgba(124, 58, 237, 0.95); /* Сделали фиолетовый фон плотнее */
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 30px rgba(124, 58, 237, 0.8), inset 0 0 15px rgba(0,0,0,0.5);
 }
 
 /* Увеличенный текст внутри лупы */
@@ -563,18 +566,8 @@
   text-align: center;
   line-height: 1.1;
   padding: 0 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
   animation: zoomInText 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes zoomInText {
-  from {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
 }
 
 /* ============================================================
