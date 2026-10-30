@@ -1,3 +1,4 @@
+import { getAssetUrl } from '../../utils/asset';
 import { useEffect, useRef, useState } from 'react';
 
 export function GameEmbed({ src }: { src: string }) {
@@ -23,7 +24,7 @@ export function GameEmbed({ src }: { src: string }) {
     <div className="media-wrapper">
       <div className="media-container" ref={containerRef}>
         <iframe
-          src={src}
+          src={getAssetUrl(src)}
           title="Embedded Content"
           allow="autoplay; fullscreen; gamepad; xr-spatial-tracking"
           loading="lazy"

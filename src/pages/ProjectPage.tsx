@@ -1,3 +1,4 @@
+import { getAssetUrl } from '../utils/asset';
 import { useParams } from 'react-router-dom';
 import { getProjectById } from '../data/projects';
 import { GameEmbed } from '../components/ui/GameEmbed';
@@ -41,7 +42,7 @@ export function ProjectPage() {
       <div className="project__content">
         {/* Игра (iframe) */}
         {project.embed?.type === 'iframe' && (
-          <GameEmbed src={project.embed.url} />
+          <GameEmbed src={getAssetUrl(project.embed.url)} />
         )}
 
         {/* Видео (теперь в такой же рамке, как игра) */}
@@ -49,7 +50,7 @@ export function ProjectPage() {
           <div className="media-wrapper">
             <div className="media-container">
               <video
-                src={project.embed.url}
+                src={getAssetUrl(project.embed.url)}
                 autoPlay
                 muted
                 loop

@@ -1,3 +1,4 @@
+import { getAssetUrl } from '../utils/asset';
 import { useMemo, useState } from 'react';
 import { projects } from '../data/projects';
 import type { ProjectType } from '../data/projects';
@@ -53,7 +54,7 @@ export function WorksPage() {
             className="work-card"
           >
             <div className="work-card__thumb">
-              <img src={p.thumbnail} alt={p.title} loading="lazy" />
+              <img src={getAssetUrl(p.thumbnail)} alt={p.title} loading="lazy" />
               <span className="work-card__type">{p.type}</span>
             </div>
             <div className="work-card__body">
