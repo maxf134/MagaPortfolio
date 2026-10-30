@@ -42,7 +42,7 @@ export function ProjectPage() {
       <div className="project__content">
         {/* Игра (iframe) */}
         {project.embed?.type === 'iframe' && (
-          <GameEmbed src={getAssetUrl(project.embed.url)} />
+          <GameEmbed src={project.embed.url} />
         )}
 
         {/* Видео (теперь в такой же рамке, как игра) */}
