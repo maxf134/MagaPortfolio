@@ -7,7 +7,6 @@
   min-height: 100vh;
 }
 
-/* 3D-сцена на заднем плане — не перехватывает клики */
 .scene-wrapper {
   position: fixed;
   inset: 0;
@@ -15,7 +14,6 @@
   pointer-events: none;
 }
 
-/* Оверлей перехода */
 .transition-overlay {
   position: fixed;
   inset: 0;
@@ -37,7 +35,7 @@
   align-items: center;
   padding: 28px 6vw;
   mix-blend-mode: difference;
-  pointer-events: auto; /* Возвращаем клики меню */
+  pointer-events: auto;
 }
 
 .navbar__logo {
@@ -76,7 +74,7 @@
   flex-direction: column;
   justify-content: center;
   padding: 0 8vw;
-  pointer-events: none; /* Пропускаем клики сквозь текст к сцене */
+  pointer-events: none;
 }
 
 .hero__eyebrow {
@@ -112,11 +110,11 @@
 
 .hero__cta {
   margin-top: 48px;
-  pointer-events: auto; /* Возвращаем клики кнопке */
+  pointer-events: auto;
 }
 
 /* ============================================================
-   PAGES (общая обёртка)
+   PAGES
    ============================================================ */
 .page {
   position: relative;
@@ -124,7 +122,7 @@
   min-height: 100vh;
   padding: 140px 8vw 100px;
   background: transparent;
-  pointer-events: none; /* Пропускаем клики сквозь текст */
+  pointer-events: none;
 }
 
 .page__header {
@@ -162,7 +160,7 @@
   flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 60px;
-  pointer-events: auto; /* Клики по фильтрам */
+  pointer-events: auto;
 }
 
 .works__filter {
@@ -194,7 +192,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 40px;
-  pointer-events: auto; /* Клики по карточкам */
+  pointer-events: auto;
 }
 
 .work-card {
@@ -283,10 +281,9 @@
   pointer-events: none;
 }
 
-/* --- Кнопка "Назад" теперь фиксированная --- */
 .project__back {
   position: fixed;
-  top: 90px; /* Чуть ниже навбара */
+  top: 90px;
   left: 8vw;
   z-index: 100;
   display: inline-block;
@@ -311,7 +308,7 @@
 
 .project__header {
   max-width: 900px;
-  margin: 0 auto 60px; /* 👈 ДОБАВЛЕН auto ПО БОКАМ */
+  margin: 0 auto 60px;
   width: 100%;
 }
 
@@ -382,7 +379,6 @@
   box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.8);
 }
 
-/* Стили для фуллскрина (работает и для видео, и для iframe) */
 .media-container:fullscreen {
   border-radius: 0;
   max-width: none;
@@ -399,9 +395,8 @@
   width: 100%;
   height: 100%;
   border: none;
-  object-fit: contain; /* Чтобы видео не обрезалось */
+  object-fit: contain;
 }
-
 
 .project__video {
   width: 100%;
@@ -410,13 +405,12 @@
   display: block;
 }
 
-/* iframe-обёртка для игр */
 /* ============================================================
-   IFRAME EMBED (Игры и приложения)
+   IFRAME EMBED (Игры)
    ============================================================ */
 .game-embed-wrapper {
   display: flex;
-  justify-content: center; /* Центрируем игру по горизонтали */
+  justify-content: center;
   width: 100%;
   margin: 40px 0 80px;
 }
@@ -424,7 +418,7 @@
 .game-embed {
   position: relative;
   width: 100%;
-  max-width: 1000px; /* Ограничиваем ширину, чтобы не растягивалась на весь 4K монитор */
+  max-width: 1000px;
   aspect-ratio: 16 / 9;
   border-radius: 20px;
   overflow: hidden;
@@ -434,7 +428,6 @@
   transition: border-radius 0.3s ease;
 }
 
-/* Стили для полноэкранного режима */
 .game-embed:fullscreen {
   border-radius: 0;
   max-width: none;
@@ -452,7 +445,6 @@
   border: none;
 }
 
-/* Кнопка Fullscreen */
 .game-embed__fullscreen-btn {
   position: absolute;
   bottom: 20px;
@@ -495,7 +487,7 @@
   background: var(--accent);
   color: #fff;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  pointer-events: auto; /* Возвращаем клики кнопке */
+  pointer-events: auto;
 }
 
 .btn-primary:hover {
@@ -504,7 +496,7 @@
 }
 
 /* ============================================================
-   КУРСОР (Контрастный режим без мазков)
+   КУРСОР (Контрастный)
    ============================================================ */
 .cursor-dot,
 .cursor-ring {
@@ -517,14 +509,11 @@
   forced-color-adjust: none !important; 
 }
 
-/* Точка: Чистая заливка + инверсия цветов */
 .cursor-dot {
   width: 8px;
   height: 8px;
   background-color: #ffffff;
-  /* 👇 Возвращаем контрастный режим */
   mix-blend-mode: difference; 
-  /* Никаких теней и рамок, чтобы браузер не тормозил */
   transition: opacity 0.2s ease;
 }
 
@@ -532,13 +521,11 @@
   opacity: 0;
 }
 
-/* Кольцо: Тонкая рамка + инверсия цветов */
 .cursor-ring {
   width: 44px;
   height: 44px;
   background-color: transparent;
   border: 2px solid #ffffff;
-  /* 👇 Возвращаем контрастный режим для кольца */
   mix-blend-mode: difference;
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
               height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
@@ -549,17 +536,14 @@
   overflow: hidden;
 }
 
-/* ЭФФЕКТ ЛУПЫ (при наведении на кнопки) */
 .cursor-ring.is-lens {
   width: 100px;
   height: 100px;
-  /* Отключаем инверсию для лупы, чтобы фиолетовый был ярким */
   mix-blend-mode: normal; 
   background-color: #7c3aed; 
   border: 2px solid #ffffff;
 }
 
-/* Текст внутри лупы */
 .cursor-lens-text {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
@@ -568,7 +552,6 @@
   text-align: center;
   line-height: 1.1;
   padding: 0 10px;
-  /* Возвращаем легкую тень только для текста, чтобы он читался на фиолетовом */
   text-shadow: 0 1px 3px rgba(0,0,0,0.8); 
   animation: zoomInText 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -578,6 +561,9 @@
   to { transform: scale(1); opacity: 1; }
 }
 
+/* ============================================================
+   КАСТОМНЫЙ ПЛЕЕР (Кнопки поверх видео)
+   ============================================================ */
 .custom-video-container {
   position: relative;
 }
@@ -586,29 +572,70 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  /* Изначально кнопка чуть уменьшена (эффект нажатия) */
   transform: translate(-50%, -50%) scale(0.8);
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: rgba(124, 58, 237, 0.85); /* Наш фиолетовый */
+  background: rgba(124, 58, 237, 0.85);
   border: 2px solid #fff;
   color: #fff;
   font-size: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0; /* Скрыта по умолчанию */
-  pointer-events: none; /* Клики проходят сквозь неё на само видео */
-  
-  /* Плавная анимация появления и исчезновения */
+  opacity: 0; 
+  pointer-events: none; 
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* 👇 Этот класс добавляется только на долю секунды при клике */
 .custom-play-btn.show-feedback {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
+}
+
+/* ============================================================
+   КНОПКА ФУЛЛСКРИНА ДЛЯ ВИДЕО
+   ============================================================ */
+.video-fullscreen-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 50;
+  padding: 10px 16px;
+  background: rgba(9, 10, 15, 0.85); 
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+  
+  opacity: 0; 
+  pointer-events: none; 
+}
+
+.video-fullscreen-btn.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.video-fullscreen-btn.show:hover,
+.custom-video-container:fullscreen .video-fullscreen-btn:hover {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  background: rgba(124, 58, 237, 0.9);
+  border-color: rgba(124, 58, 237, 1);
+}
+
+.custom-video-container:fullscreen .video-fullscreen-btn {
+  bottom: 40px;
+  right: 40px;
+}
+
+.custom-video-container:fullscreen video {
+  object-fit: contain;
 }
 
 /* ============================================================
@@ -625,37 +652,28 @@
               background-color 0.3s ease;
 }
 
-/* Применяем эффект ТОЛЬКО к кнопкам (без карточек и логотипа) */
 .btn-primary:hover,
 .navbar__link:hover,
 .works__filter:hover,
 .project__back:hover {
-  /* 1. Увеличиваем кнопку */
   transform: scale(1.25); 
-  
-  /* 2. Делаем оригинальный текст прозрачным */
   color: transparent !important; 
-  
-  /* 3. Добавляем свечение */
   box-shadow: 0 0 40px rgba(124, 58, 237, 0.4);
   z-index: 10;
 }
 
-/* Отдельная настройка для кнопки с фиолетовым фоном */
 .btn-primary:hover {
   background: rgba(124, 58, 237, 0.8);
 }
 
-/* Для фильтров и ссылок в навбаре добавляем рамку */
 .works__filter:hover,
 .navbar__link:hover {
   border-color: rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.05);
 }
 
-
 /* ============================================================
-   МОБИЛЬНАЯ АДАПТАЦИЯ И ТАЧ-УСТРОЙСТВА
+   МОБИЛЬНАЯ АДАПТАЦИЯ
    ============================================================ */
 @media (pointer: coarse) {
   body {

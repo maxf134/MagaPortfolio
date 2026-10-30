@@ -8,15 +8,20 @@ import { TransitionLink } from '../components/three/TransitionOverlay';
 export function ProjectPage() {
   const { id } = useParams();
   const project = id ? getProjectById(id) : undefined;
-  
-  const videoRef = useRef<HTMLVideoElement>(null);
-  
-  // 👇 Состояния для YouTube-подобного плеера
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const timeoutRef = useRef<number | null>(null);
 
-  // 👇 Функция переключения (Play/Pause)
+  // --- Состояния и ссылки для видео ---
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false); 
+  const feedbackTimeoutRef = useRef<number | null>(null);
+
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showVideoControls, setShowVideoControls] = useState(true); 
+  const controlsTimeoutRef = useRef<number | null>(null);
+
+  // --- Функции управления видео ---
   const togglePlay = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
@@ -27,20 +32,53 @@ export function ProjectPage() {
         setIsPlaying(false);
       }
 
-      // Показываем иконку и запускаем таймер на её исчезновение
+      // Показываем иконку по центру и скрываем через 0.6 сек
       setShowFeedback(true);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      
-      timeoutRef.current = window.setTimeout(() => {
-        setShowFeedback(false);
-      }, 600); // Иконка исчезнет через 0.6 секунды
+      if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+      feedbackTimeoutRef.current = window.setTimeout(() => setShowFeedback(false), 600);
     }
   };
 
-  // Очищаем таймер при размонтировании компонента
+  const toggleFullscreen = (e: React.MouseEvent) => {
+    e.stopPropagation(); 
+    if (!containerRef.current) return;
+
+    if (!document.fullscreenElement) {
+      containerRef.current.requestFullscreen().catch((err) => console.error(err));
+    } else {
+      document.exitFullscreen();
+    }
+
+    // Принудительно показываем кнопку Exit/Fullscreen на пару секунд
+    setShowVideoControls(true);
+    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = window.setTimeout(() => {
+      setShowVideoControls(false);
+    }, 2000);
+  }; // 👈 ТУТ БЫЛА ОШИБКА (не хватало этой скобки)
+
+  // --- Отслеживание движения мыши (как на YouTube) ---
+  const handleMouseMove = () => {
+    setShowVideoControls(true);
+    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = window.setTimeout(() => {
+      setShowVideoControls(false);
+    }, 2000); 
+  };
+
+  const handleMouseLeave = () => {
+    setShowVideoControls(false);
+  };
+
+  // --- Эффекты очистки и фуллскрина ---
   useEffect(() => {
+    const onFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+      if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
     };
   }, []);
 
@@ -57,6 +95,7 @@ export function ProjectPage() {
 
   return (
     <div className="page project">
+      {/* Защита от автоперевода Chrome */}
       <div translate="no" className="notranslate">
         <TransitionLink to="/works" className="project__back">
           ← ВСЕ РАБОТЫ
@@ -77,13 +116,20 @@ export function ProjectPage() {
       </div>
 
       <div className="project__content">
+        {/* Игра (iframe) */}
         {project.embed?.type === 'iframe' && (
           <GameEmbed src={project.embed.url} />
         )}
 
+        {/* Кастомный видеоплеер */}
         {project.embed?.type === 'video' && (
           <div className="media-wrapper">
-            <div className="media-container custom-video-container">
+            <div 
+              className="media-container custom-video-container" 
+              ref={containerRef}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            >
               <video
                 ref={videoRef}
                 onClick={togglePlay}
@@ -92,27 +138,46 @@ export function ProjectPage() {
                 preload="none"
                 playsInline
                 style={{ cursor: 'pointer' }}
-                // 👇 Синхронизируем состояние, если видео останавливается извне
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
               />
               
-              {/* 👇 Кнопка появляется только при клике (класс show-feedback) */}
+              {/* Индикатор Play/Pause при клике */}
               <div className={`custom-play-btn ${showFeedback ? 'show-feedback' : ''}`}>
                 {isPlaying ? '▶' : '❚❚'}
               </div>
+
+              {/* Кнопка Fullscreen (появляется только через класс show) */}
+              <button 
+                className={`video-fullscreen-btn ${showVideoControls ? 'show' : ''}`} 
+                onClick={toggleFullscreen}
+              >
+                {isFullscreen ? '✕ Exit' : '⛶ Fullscreen'}
+              </button>
             </div>
           </div>
         )}
 
+        {/* Ссылка на GitHub */}
         {project.embed?.type === 'github-link' && (
-          <a href={project.embed.url} target="_blank" rel="noreferrer" className="btn-primary">
+          <a
+            href={project.embed.url}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-primary"
+          >
             Открыть на GitHub ↗
           </a>
         )}
 
+        {/* Внешняя ссылка */}
         {project.embed?.type === 'external' && (
-          <a href={project.embed.url} target="_blank" rel="noreferrer" className="btn-primary">
+          <a
+            href={project.embed.url}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-primary"
+          >
             Открыть проект ↗
           </a>
         )}
